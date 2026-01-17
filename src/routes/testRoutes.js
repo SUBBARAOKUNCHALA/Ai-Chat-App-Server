@@ -1,9 +1,13 @@
 import express from "express";
 import protect from "../middlewares/authMiddleware.js";
-import { aiChat } from "../controllers/aiController.js";
 
 const router = express.Router();
 
-router.post("/chat", protect, aiChat);
+router.get("/protected", protect, (req, res) => {
+  res.json({
+    message: "Middleware working ✅",
+    user: req.user,
+  });
+});
 
 export default router;
