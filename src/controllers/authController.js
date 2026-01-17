@@ -61,10 +61,10 @@ export const getAllUsers = async (req, res) => {
 
     // Encrypt sensitive fields only
     const encryptedUsers = users.map(user => ({
-      _id: encryptData(user._id.toString()),
+      _id: user._id.toString(),
       username: encryptData(user.username),
       email: encryptData(user.email),
-      createdAt: encryptData(user.createdAt)
+      createdAt: user.createdAt
     }));
     // console.log("encrypted response",encryptedUsers)
 

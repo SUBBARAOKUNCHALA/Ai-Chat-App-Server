@@ -1,13 +1,18 @@
 import Message from "../models/Message.js";
-
+import { isFriend } from "../utils/checkFriend.js";
 // Send Message
 export const sendMessage = async (req, res) => {
   try {
+    const allowed = await isFriend(senderId, receiverId);
     const { receiverId, content } = req.body;
 
     if (!content) {
       return res.status(400).json({ message: "Message content required" });
     }
+    else if (!allowed)
+      return res.status(403).json({
+        message: "Please add friend before chatting"
+      });
 
     const message = await Message.create({
       sender: req.user._id,
