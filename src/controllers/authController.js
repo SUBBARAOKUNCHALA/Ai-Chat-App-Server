@@ -57,21 +57,49 @@ export const loginUser = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
 
-    const users = await User.find().select("-password");
+    const users = await User.find()
+      .select("username email createdAt"); // NO password, NO friends
 
-    // Encrypt sensitive fields only
     const encryptedUsers = users.map(user => ({
       _id: user._id.toString(),
       username: encryptData(user.username),
       email: encryptData(user.email),
       createdAt: user.createdAt
     }));
-    // console.log("encrypted response",encryptedUsers)
 
     res.status(200).json(encryptedUsers);
 
   } catch (error) {
-    console.error("Get users error:", error);
+    console.error("Get all users error:", error);
     res.status(500).json({ message: "Failed to fetch users" });
   }
 };
+
+export const getMyFriends = async (req, res) => {
+  try {
+
+    const userId = req.user.id; // From auth middleware
+
+    const user = await User.findById(userId)
+      .select("friends")
+      .populate("friends", "username email createdAt");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const encryptedFriends = user.friends.map(friend => ({
+      _id: friend._id.toString(),
+      username: friend.username,
+      email: encryptData(friend.email),
+      createdAt: friend.createdAt
+    }));
+
+    res.status(200).json(encryptedFriends);
+
+  } catch (error) {
+    console.error("Friends fetch error:", error);
+    res.status(500).json({ message: "Failed to fetch friends" });
+  }
+};
+

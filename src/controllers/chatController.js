@@ -3,28 +3,34 @@ import { isFriend } from "../utils/checkFriend.js";
 // Send Message
 export const sendMessage = async (req, res) => {
   try {
-    const allowed = await isFriend(senderId, receiverId);
+    const senderId = req.user._id; // FROM JWT
     const { receiverId, content } = req.body;
 
-    if (!content) {
-      return res.status(400).json({ message: "Message content required" });
+    if (!content || !receiverId) {
+      return res.status(400).json({ message: "Missing fields" });
     }
-    else if (!allowed)
+
+    const allowed = await isFriend(senderId, receiverId);
+
+    if (!allowed) {
       return res.status(403).json({
         message: "Please add friend before chatting"
       });
+    }
 
     const message = await Message.create({
-      sender: req.user._id,
+      sender: senderId,
       receiver: receiverId,
-      content,
+      content
     });
 
     res.status(201).json(message);
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Get Chat Messages (User ↔ User)
 export const getMessages = async (req, res) => {
