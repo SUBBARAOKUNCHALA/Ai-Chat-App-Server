@@ -19,10 +19,10 @@ const userSchema = new mongoose.Schema(
     },
     friends: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "ChatUser"
     }]
   },
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model("ChatUser", userSchema);

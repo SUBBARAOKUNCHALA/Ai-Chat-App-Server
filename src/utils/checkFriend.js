@@ -1,8 +1,8 @@
-import User from "../models/User.js";
+import ChatUser from "../models/User.js";
 
 export const isFriend = async (senderId, receiverId) => {
 
-  const sender = await User.findById(senderId);
+  const sender = await ChatUser.findById(senderId);
 
   if (!sender) return false;
 

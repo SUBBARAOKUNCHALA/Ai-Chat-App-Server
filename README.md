@@ -57,7 +57,7 @@ ai-chat-app/
 │   │   │   └── env.js
 │   │
 │   │   ├── models/
-│   │   │   ├── User.js
+│   │   │   ├── ChatUser.js
 │   │   │   └── Message.js
 │   │
 │   │   ├── controllers/

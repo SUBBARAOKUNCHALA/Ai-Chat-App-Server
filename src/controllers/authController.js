@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import ChatUser from '../models/User.js'
 import bcrypt from "bcryptjs";
 import { encryptData,decryptData } from "../utils/encryption.js";
 import generateToken from "../utils/generateToken.js";
@@ -8,13 +9,13 @@ export const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    const userExists = await User.findOne({ email });
+    const userExists = await ChatUser.findOne({ email });
     if (userExists)
       return res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
+    const user = await ChatUser.create({
       username,
       email,
       password: hashedPassword,
@@ -36,7 +37,7 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await ChatUser.findOne({ email });
     if (!user)
       return res.status(400).json({ message: "Invalid credentials" });
 
@@ -57,7 +58,7 @@ export const loginUser = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
 
-    const users = await User.find()
+    const users = await ChatUser.find()
       .select("username email createdAt"); // NO password, NO friends
 
     const encryptedUsers = users.map(user => ({
@@ -80,7 +81,7 @@ export const getMyFriends = async (req, res) => {
 
     const userId = req.user.id; // From auth middleware
 
-    const user = await User.findById(userId)
+    const user = await ChatUser.findById(userId)
       .select("friends")
       .populate("friends", "username email createdAt");
 

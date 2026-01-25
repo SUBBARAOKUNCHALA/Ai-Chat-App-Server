@@ -1,5 +1,6 @@
 import FriendRequest from "../models/FriendRequest.js";
 import User from "../models/User.js";
+import ChatUser from '../models/User.js'
 import mongoose from "mongoose";
 
 // ================= SEND REQUEST =================
@@ -19,7 +20,7 @@ export const sendFriendRequest = async (req, res) => {
       return res.status(400).json({ message: "You can't add yourself" });
     }
 
-    const alreadyFriend = await User.findOne({
+    const alreadyFriend = await ChatUser.findOne({
       _id: senderId,
       friends: receiverId
     });
@@ -130,11 +131,11 @@ export const acceptFriendRequest = async (req, res) => {
 
     // ================= ADD FRIENDS BOTH SIDES =================
 
-    await User.findByIdAndUpdate(request.sender, {
+    await ChatUser.findByIdAndUpdate(request.sender, {
       $addToSet: { friends: request.receiver }
     });
 
-    await User.findByIdAndUpdate(request.receiver, {
+    await ChatUser.findByIdAndUpdate(request.receiver, {
       $addToSet: { friends: request.sender }
     });
 
