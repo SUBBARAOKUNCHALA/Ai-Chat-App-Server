@@ -9,6 +9,7 @@ export const aiChat = async (req, res) => {
     }
 
     const reply = await runAIChat(message);
+    //console.log("Subbu res from chat controllers",reply)
 
     res.json({
       role: "assistant",
@@ -16,5 +17,6 @@ export const aiChat = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+
   }
 };

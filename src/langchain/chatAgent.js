@@ -1,23 +1,16 @@
-import { ChatOpenAI } from "@langchain/openai";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { ChatGroq } from "@langchain/groq";
+import dotenv from "dotenv";
+dotenv.config();
 
-// const chatModel = new ChatOpenAI({
-//   apiKey: process.env.OPENAI_API_KEY,
-//   temperature: 0.5,
-// });
-
-const chatModel = new ChatOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  model: "gpt-4o-mini",  // FREE MODEL
-  temperature: 0.7
+const chatModel = new ChatGroq({
+  apiKey: process.env.GROQ_API_KEY,
+  model: "llama-3.1-8b-instant", 
+  temperature: 0.7,
 });
 
-// ✅ NAMED EXPORT
-export const runAIChat = async (userMessage) => {
-  const response = await chatModel.invoke([
-    new SystemMessage("You are a helpful AI assistant."),
-    new HumanMessage(userMessage),
-  ]);
 
-  return response.content;
+export const runAIChat = async (userMessage) => {
+  const res = await chatModel.invoke(userMessage);
+  //console.log("Subbu res from chat Agent",res)
+  return res.content;
 };
